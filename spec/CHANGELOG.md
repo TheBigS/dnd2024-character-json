@@ -11,6 +11,23 @@ A document declares the version it targets via the top-level `spec_version` fiel
 Tools should accept any document whose MAJOR matches and whose MINOR is ≤ the
 version they implement.
 
+## 1.1.0 — 2026-10-20
+
+Additive live-play and inventory fields. Documents that omit them remain valid
+`1.0.0` files; set `spec_version` to `1.1.0` when using the new shapes.
+
+- **`spell_slots` values** may be either an integer total (unchanged from 1.0.0)
+  or `{ "total", "expended?" }` so tools can persist spent slots during a session.
+- **`resources`**: optional array of `{ "name", "maximum", "current?" }` pools
+  (ki, rage, sorcery points, channel divinity, and similar).
+- **`prepared_count`**: optional integer preparation budget for prepared casters.
+- **`pact_slots`**: optional `{ "total", "expended?", "level?" }` for pact magic.
+- **`equipment` items** may be strings (1.0.0) or objects
+  `{ "name", "quantity?", "equipped?", "notes?" }`.
+
+See `spec/examples/live-play-state.json` for a minimal document that exercises
+the new fields.
+
 ## 1.0.0 — 2026-06-15
 
 Initial release.

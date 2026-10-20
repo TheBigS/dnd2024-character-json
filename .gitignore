@@ -22,3 +22,4 @@ _chars_backup/
 # Generated sheets — regenerate with `python generate_sheets.py`.
 # Comment this out if you want to commit example outputs.
 output/
+.venv/
