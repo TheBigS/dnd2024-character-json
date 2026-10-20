@@ -33,8 +33,9 @@ Shape, in brief:
   hit_points{max,current,temp}, hit_dice{die,total,spent}, death_saves{},
   proficiencies{armor[],weapons,tools,languages},
   weapons[], feats[{name,description}], class_features[{name,description}],
-  equipment[], coins{}, attunement[],
-  spellcasting{ability}, spell_slots{}, spells[]
+  equipment[] (string or {name,quantity?,equipped?,notes?}), coins{}, attunement[],
+  spellcasting{ability}, spell_slots{} (int total or {total,expended?}),
+  pact_slots?, resources?, prepared_count?, spells[]
 
 Derived (not stored): ability modifiers; proficiency bonus (from level if
 omitted); spell save DC / attack bonus (from the spellcasting ability).
@@ -319,6 +320,45 @@ def join_features(items):
     return "\n\n".join(p for p in parts if p)
 
 
+def spell_slot_counts(entry):
+    """Normalize a spell_slots value to (total, expended).
+
+    Accepts the 1.0 integer form or the 1.1 object form {total, expended?}.
+    """
+    if isinstance(entry, dict):
+        total = int(entry.get("total") or 0)
+        expended = int(entry.get("expended") or 0)
+        if expended < 0:
+            expended = 0
+        if expended > total:
+            expended = total
+        return total, expended
+    try:
+        total = int(entry or 0)
+    except (TypeError, ValueError):
+        total = 0
+    return max(0, total), 0
+
+
+def format_equipment_line(item):
+    """Render a string or structured equipment entry as one inventory line."""
+    if isinstance(item, dict):
+        name = (item.get("name") or "").strip() or "Item"
+        qty = item.get("quantity")
+        try:
+            qty_n = int(qty) if qty is not None else 1
+        except (TypeError, ValueError):
+            qty_n = 1
+        line = "{} ({})".format(name, qty_n) if qty_n != 1 else name
+        if item.get("equipped"):
+            line = "{} [equipped]".format(line)
+        notes = (item.get("notes") or "").strip()
+        if notes:
+            line = "{} — {}".format(line, notes)
+        return line
+    return str(item)
+
+
 def validate_character(char):
     """Return a list of human-readable warning strings (does not raise)."""
     warnings = []
@@ -507,7 +547,9 @@ def compute_fields(char):
     fields["CLASS FEATURES 2"] = ""
 
     # --- Equipment & Personality ---
-    fields["EQUIPMENT"] = "\n".join(char.get("equipment", []) or [])
+    fields["EQUIPMENT"] = "\n".join(
+        format_equipment_line(item) for item in (char.get("equipment", []) or [])
+    )
     fields["PERSONALITY"] = char.get("personality", "")
 
     # --- Coins ---
@@ -534,12 +576,18 @@ def compute_fields(char):
         fields["SPELL SAVE DC"] = str(save_dc)
         fields["SPELL ATTACK BONUS"] = fmt_mod(atk) if isinstance(atk, int) else str(atk)
 
-    # --- Spell slots ---
-    slots = char.get("spell_slots", {})
+    # --- Spell slots (int total, or {total, expended} from spec 1.1.0) ---
+    slots = char.get("spell_slots", {}) or {}
     for lvl in range(1, 10):
         key = str(lvl)
-        if key in slots:
-            fields["LVL{} TOTAL".format(lvl)] = str(slots[key])
+        if key not in slots:
+            continue
+        total, expended = spell_slot_counts(slots[key])
+        fields["LVL{} TOTAL".format(lvl)] = str(total)
+        boxes = SPELL_SLOT_EXPENDED.get(lvl, [])
+        for i, box in enumerate(boxes):
+            if i < expended:
+                checks[box] = True
 
     # --- Spells ---
     spells = char.get("spells", [])

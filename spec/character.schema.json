@@ -3,82 +3,154 @@
   "$id": "https://raw.githubusercontent.com/TheBigS/dnd2024-character-json/main/spec/character.schema.json",
   "$comment": "The $id is the stable, versioned identity other tools use to recognise this format.",
   "title": "D&D 2024 Character",
-  "description": "A structured, edition-2024 (5.5e) Dungeons & Dragons player character. Designed as a converter-neutral source of truth: one document can be rendered to a fillable PDF, an Obsidian stat block, a VTT import, etc. Homebrew is first-class — species, lineages, feats, and flat skill bonuses are all expressible. SemVer: the 1.x line makes only additive, backwards-compatible changes; a 2.0.0 may restructure.",
-  "version": "1.0.0",
+  "description": "A structured, edition-2024 (5.5e) Dungeons & Dragons player character. Designed as a converter-neutral source of truth: one document can be rendered to a fillable PDF, an Obsidian stat block, a VTT import, etc. Homebrew is first-class — species, lineages, feats, and flat skill bonuses are all expressible. SemVer: the 1.x line makes only additive, backwards-compatible changes; a 2.0.0 may restructure. Version 1.1.0 adds optional live-play fields (slot expenditure, class resources, pact slots, prepared budget, and structured equipment items).",
+  "version": "1.1.0",
   "type": "object",
-  "required": ["spec_version", "name", "species", "classes", "abilities"],
+  "required": [
+    "spec_version",
+    "name",
+    "species",
+    "classes",
+    "abilities"
+  ],
   "additionalProperties": false,
   "properties": {
     "spec_version": {
       "type": "string",
       "pattern": "^\\d+\\.\\d+\\.\\d+$",
       "description": "The version of THIS specification the document targets. A parser supporting 1.x can read any 1.y document.",
-      "examples": ["1.0.0"]
+      "examples": [
+        "1.0.0"
+      ]
     },
     "_comment": {
       "type": "string",
       "description": "Free human note (player, provenance, reminders). Ignored by tools.",
-      "examples": ["Bram Ironhold - Human Fighter 3 (example)."]
+      "examples": [
+        "Bram Ironhold - Human Fighter 3 (example)."
+      ]
     },
     "name": {
       "type": "string",
       "description": "The character's name as it should appear on outputs.",
-      "examples": ["Bram Ironhold", "Lia Brightwood"]
+      "examples": [
+        "Bram Ironhold",
+        "Lia Brightwood"
+      ]
     },
     "player": {
       "type": "string",
       "description": "The real-world player's name. Optional; not all layouts render it.",
-      "examples": ["Sam"]
+      "examples": [
+        "Sam"
+      ]
     },
-    "species": { "$ref": "#/$defs/species" },
+    "species": {
+      "$ref": "#/$defs/species"
+    },
     "classes": {
       "type": "array",
       "minItems": 1,
       "description": "One entry per class (an array, so multiclassing is supported). Order is display order.",
-      "items": { "$ref": "#/$defs/classEntry" }
+      "items": {
+        "$ref": "#/$defs/classEntry"
+      }
     },
     "background": {
       "type": "string",
       "description": "Background name. In 2024 the background grants an Origin feat and ability score increases.",
-      "examples": ["Soldier", "Sage", "Criminal"]
+      "examples": [
+        "Soldier",
+        "Sage",
+        "Criminal"
+      ]
     },
     "alignment": {
       "type": "string",
-      "examples": ["Neutral Good", "Chaotic Neutral", ""]
+      "examples": [
+        "Neutral Good",
+        "Chaotic Neutral",
+        ""
+      ]
     },
     "xp": {
-      "type": ["string", "integer"],
+      "type": [
+        "string",
+        "integer"
+      ],
       "description": "Experience points, or a string for milestone games.",
-      "examples": ["(Milestone)", 900]
+      "examples": [
+        "(Milestone)",
+        900
+      ]
     },
-    "abilities": { "$ref": "#/$defs/abilities" },
+    "abilities": {
+      "$ref": "#/$defs/abilities"
+    },
     "proficiency_bonus": {
       "type": "integer",
       "description": "Optional. If omitted, a converter should compute it from total level: 2 + floor((level-1)/4).",
-      "examples": [2, 3]
+      "examples": [
+        2,
+        3
+      ]
     },
     "saving_throws": {
       "type": "array",
       "uniqueItems": true,
       "description": "Abilities the character is PROFICIENT in for saving throws.",
-      "items": { "$ref": "#/$defs/ability" },
-      "examples": [["int", "wis"]]
+      "items": {
+        "$ref": "#/$defs/ability"
+      },
+      "examples": [
+        [
+          "int",
+          "wis"
+        ]
+      ]
     },
     "skills": {
       "type": "object",
       "description": "Only list skills the character has training in. Value is the training level. A skill absent from this map is not proficient. Expertise implies proficiency (double bonus).",
-      "propertyNames": { "$ref": "#/$defs/skillName" },
-      "additionalProperties": { "enum": ["proficient", "expertise"] },
-      "examples": [{ "stealth": "expertise", "perception": "proficient" }]
+      "propertyNames": {
+        "$ref": "#/$defs/skillName"
+      },
+      "additionalProperties": {
+        "enum": [
+          "proficient",
+          "expertise"
+        ]
+      },
+      "examples": [
+        {
+          "stealth": "expertise",
+          "perception": "proficient"
+        }
+      ]
     },
     "skill_bonuses": {
       "type": "object",
       "description": "Flat numeric bonuses to specific skills from feats/items (e.g. the Magician feat's +2 to Arcana/Nature). Added on top of ability + proficiency; does NOT by itself grant proficiency.",
-      "propertyNames": { "$ref": "#/$defs/skillName" },
-      "additionalProperties": { "type": "integer" },
-      "examples": [{ "arcana": 2, "nature": 2 }]
+      "propertyNames": {
+        "$ref": "#/$defs/skillName"
+      },
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "examples": [
+        {
+          "arcana": 2,
+          "nature": 2
+        }
+      ]
     },
-    "armor_class": { "type": "integer", "examples": [13, 16] },
+    "armor_class": {
+      "type": "integer",
+      "examples": [
+        13,
+        16
+      ]
+    },
     "shield": {
       "type": "boolean",
       "description": "Whether a shield is equipped (already included in armor_class).",
@@ -87,191 +159,503 @@
     "initiative": {
       "type": "integer",
       "description": "Final initiative bonus including feats (e.g. Alert adds proficiency). If omitted, compute from the Dexterity modifier.",
-      "examples": [2, 4]
+      "examples": [
+        2,
+        4
+      ]
     },
-    "speed": { "$ref": "#/$defs/speed" },
+    "speed": {
+      "$ref": "#/$defs/speed"
+    },
     "size": {
       "type": "string",
-      "enum": ["Tiny", "Small", "Medium", "Large", "Huge", "Gargantuan"],
+      "enum": [
+        "Tiny",
+        "Small",
+        "Medium",
+        "Large",
+        "Huge",
+        "Gargantuan"
+      ],
       "default": "Medium"
     },
-    "senses": { "$ref": "#/$defs/senses" },
+    "senses": {
+      "$ref": "#/$defs/senses"
+    },
     "passive_perception": {
       "type": "integer",
       "description": "Optional. If omitted, compute 10 + Perception bonus.",
-      "examples": [10, 14]
+      "examples": [
+        10,
+        14
+      ]
     },
-    "hit_points": { "$ref": "#/$defs/hitPoints" },
-    "hit_dice": { "$ref": "#/$defs/hitDice" },
-    "death_saves": { "$ref": "#/$defs/deathSaves" },
-    "proficiencies": { "$ref": "#/$defs/proficiencies" },
+    "hit_points": {
+      "$ref": "#/$defs/hitPoints"
+    },
+    "hit_dice": {
+      "$ref": "#/$defs/hitDice"
+    },
+    "death_saves": {
+      "$ref": "#/$defs/deathSaves"
+    },
+    "proficiencies": {
+      "$ref": "#/$defs/proficiencies"
+    },
     "weapons": {
       "type": "array",
       "description": "Weapon / attack-cantrip rows for the attacks table.",
-      "items": { "$ref": "#/$defs/weapon" }
+      "items": {
+        "$ref": "#/$defs/weapon"
+      }
     },
     "feats": {
       "type": "array",
       "description": "Feats (origin, general, fighting-style, etc.).",
-      "items": { "$ref": "#/$defs/namedFeature" }
+      "items": {
+        "$ref": "#/$defs/namedFeature"
+      }
     },
     "class_features": {
       "type": "array",
       "description": "Class & subclass features.",
-      "items": { "$ref": "#/$defs/namedFeature" }
+      "items": {
+        "$ref": "#/$defs/namedFeature"
+      }
     },
     "equipment": {
       "type": "array",
-      "description": "Carried gear. Quantities may be embedded in the string.",
-      "items": { "type": "string" },
-      "examples": [["Studded Leather", "Dagger", "Rations (10)"]]
+      "description": "Carried gear. Each entry may be a plain string (1.0 style) or an object with quantity / equipped / notes (1.1+).",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "$ref": "#/$defs/equipmentItem"
+          }
+        ]
+      },
+      "examples": [
+        [
+          "Studded Leather",
+          "Dagger",
+          "Rations (10)"
+        ],
+        [
+          {
+            "name": "Dagger",
+            "quantity": 2,
+            "equipped": true
+          },
+          {
+            "name": "Backpack",
+            "notes": "Contains rations and a waterskin."
+          }
+        ]
+      ]
     },
-    "coins": { "$ref": "#/$defs/coins" },
+    "coins": {
+      "$ref": "#/$defs/coins"
+    },
     "attunement": {
       "type": "array",
       "maxItems": 3,
       "description": "Attuned magic items (max 3 by the rules).",
-      "items": { "type": "string" }
+      "items": {
+        "type": "string"
+      }
     },
-    "spellcasting": { "$ref": "#/$defs/spellcasting" },
+    "spellcasting": {
+      "$ref": "#/$defs/spellcasting"
+    },
     "spell_slots": {
       "type": "object",
-      "description": "Spell slots per level: key is the level (\"1\"-\"9\"), value is the number of slots.",
-      "propertyNames": { "pattern": "^[1-9]$" },
-      "additionalProperties": { "type": "integer", "minimum": 0 },
-      "examples": [{ "1": 3 }]
+      "description": "Spell slots per level. Key is the level (\"1\"-\"9\"). Value may be either an integer total (1.0 style) or an object with total and optional expended counts for live play (1.1+). Converters that only need capacity may ignore expended.",
+      "propertyNames": {
+        "pattern": "^[1-9]$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/spellSlotEntry"
+      },
+      "examples": [
+        {
+          "1": 3
+        },
+        {
+          "1": {
+            "total": 4,
+            "expended": 1
+          },
+          "2": {
+            "total": 2,
+            "expended": 0
+          }
+        }
+      ]
     },
     "spells": {
       "type": "array",
-      "items": { "$ref": "#/$defs/spell" }
+      "items": {
+        "$ref": "#/$defs/spell"
+      }
     },
     "personality": {
       "type": "string",
       "description": "Personality traits / ideals / bonds / flaws, free text."
+    },
+    "resources": {
+      "type": "array",
+      "description": "Tracked class or feature resource pools used during play (for example ki, rage, sorcery points, channel divinity, or similar). Optional; omit when the character has none.",
+      "items": {
+        "$ref": "#/$defs/resource"
+      },
+      "examples": [
+        [
+          {
+            "name": "Ki",
+            "current": 3,
+            "maximum": 3
+          },
+          {
+            "name": "Second Wind",
+            "current": 1,
+            "maximum": 1
+          }
+        ]
+      ]
+    },
+    "prepared_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "How many spells the character may currently prepare (or an equivalent preparation budget). Distinct from per-spell `prepared` flags on `spells[]`. Optional; useful for prepared casters tracked outside a full spell list.",
+      "examples": [
+        4,
+        6,
+        9
+      ]
+    },
+    "pact_slots": {
+      "$ref": "#/$defs/pactSlots",
+      "description": "Warlock-style pact magic slots (shared level, separate from `spell_slots`). Optional."
     }
   },
-
   "$defs": {
     "ability": {
       "type": "string",
-      "enum": ["str", "dex", "con", "int", "wis", "cha"],
+      "enum": [
+        "str",
+        "dex",
+        "con",
+        "int",
+        "wis",
+        "cha"
+      ],
       "description": "Three-letter ability key."
     },
     "skillName": {
       "type": "string",
       "enum": [
-        "acrobatics", "animal_handling", "arcana", "athletics", "deception",
-        "history", "insight", "intimidation", "investigation", "medicine",
-        "nature", "perception", "performance", "persuasion", "religion",
-        "sleight_of_hand", "stealth", "survival"
+        "acrobatics",
+        "animal_handling",
+        "arcana",
+        "athletics",
+        "deception",
+        "history",
+        "insight",
+        "intimidation",
+        "investigation",
+        "medicine",
+        "nature",
+        "perception",
+        "performance",
+        "persuasion",
+        "religion",
+        "sleight_of_hand",
+        "stealth",
+        "survival"
       ],
       "description": "snake_case skill key."
     },
     "abilities": {
       "type": "object",
       "description": "Raw ability scores. Modifiers are derived: floor((score-10)/2).",
-      "required": ["str", "dex", "con", "int", "wis", "cha"],
+      "required": [
+        "str",
+        "dex",
+        "con",
+        "int",
+        "wis",
+        "cha"
+      ],
       "additionalProperties": false,
       "properties": {
-        "str": { "type": "integer", "minimum": 1, "maximum": 30 },
-        "dex": { "type": "integer", "minimum": 1, "maximum": 30 },
-        "con": { "type": "integer", "minimum": 1, "maximum": 30 },
-        "int": { "type": "integer", "minimum": 1, "maximum": 30 },
-        "wis": { "type": "integer", "minimum": 1, "maximum": 30 },
-        "cha": { "type": "integer", "minimum": 1, "maximum": 30 }
+        "str": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30
+        },
+        "dex": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30
+        },
+        "con": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30
+        },
+        "int": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30
+        },
+        "wis": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30
+        },
+        "cha": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30
+        }
       },
-      "examples": [{ "str": 9, "dex": 15, "con": 15, "int": 12, "wis": 14, "cha": 10 }]
+      "examples": [
+        {
+          "str": 9,
+          "dex": 15,
+          "con": 15,
+          "int": 12,
+          "wis": 14,
+          "cha": 10
+        }
+      ]
     },
     "species": {
       "type": "object",
       "description": "Species (formerly 'race'). Homebrew species are fully supported — just give the name and traits.",
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "additionalProperties": false,
       "properties": {
-        "name": { "type": "string", "examples": ["Human", "Elf", "Dwarf", "Goliath"] },
+        "name": {
+          "type": "string",
+          "examples": [
+            "Human",
+            "Elf",
+            "Dwarf",
+            "Goliath"
+          ]
+        },
         "lineage": {
           "type": "string",
           "description": "Sub-choice within a species (e.g. an Elven lineage).",
-          "examples": ["Wood Elf", "High Elf"]
+          "examples": [
+            "Wood Elf",
+            "High Elf"
+          ]
         },
         "traits": {
           "type": "array",
           "description": "Species traits, each a name + description so any layout can format them.",
-          "items": { "$ref": "#/$defs/namedFeature" }
+          "items": {
+            "$ref": "#/$defs/namedFeature"
+          }
         }
       },
-      "examples": [{
-        "name": "Dragonborn",
-        "traits": [
-          { "name": "Draconic Ancestry", "description": "Choose a dragon type; it sets your Breath Weapon's damage type and your damage resistance." },
-          { "name": "Breath Weapon", "description": "Replace an attack to exhale destructive energy in a cone or line (Dexterity save)." }
-        ]
-      }]
+      "examples": [
+        {
+          "name": "Dragonborn",
+          "traits": [
+            {
+              "name": "Draconic Ancestry",
+              "description": "Choose a dragon type; it sets your Breath Weapon's damage type and your damage resistance."
+            },
+            {
+              "name": "Breath Weapon",
+              "description": "Replace an attack to exhale destructive energy in a cone or line (Dexterity save)."
+            }
+          ]
+        }
+      ]
     },
     "classEntry": {
       "type": "object",
-      "required": ["name", "level"],
+      "required": [
+        "name",
+        "level"
+      ],
       "additionalProperties": false,
       "properties": {
-        "name": { "type": "string", "examples": ["Druid", "Rogue"] },
-        "subclass": { "type": "string", "description": "Subclass; empty before the subclass level.", "examples": ["", "Circle of the Land"] },
-        "level": { "type": "integer", "minimum": 1, "maximum": 20 },
-        "hit_die": { "type": "string", "pattern": "^d(4|6|8|10|12)$", "examples": ["d8", "d10"] }
+        "name": {
+          "type": "string",
+          "examples": [
+            "Druid",
+            "Rogue"
+          ]
+        },
+        "subclass": {
+          "type": "string",
+          "description": "Subclass; empty before the subclass level.",
+          "examples": [
+            "",
+            "Circle of the Land"
+          ]
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20
+        },
+        "hit_die": {
+          "type": "string",
+          "pattern": "^d(4|6|8|10|12)$",
+          "examples": [
+            "d8",
+            "d10"
+          ]
+        }
       }
     },
     "speed": {
       "type": "object",
       "description": "Movement speeds in feet. Only 'walk' is required; add others as the species grants them.",
-      "required": ["walk"],
+      "required": [
+        "walk"
+      ],
       "additionalProperties": false,
       "properties": {
-        "walk": { "type": "integer", "minimum": 0 },
-        "fly": { "type": "integer", "minimum": 0 },
-        "climb": { "type": "integer", "minimum": 0 },
-        "swim": { "type": "integer", "minimum": 0 },
-        "burrow": { "type": "integer", "minimum": 0 }
+        "walk": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "fly": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "climb": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "swim": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "burrow": {
+          "type": "integer",
+          "minimum": 0
+        }
       },
-      "examples": [{ "walk": 30, "fly": 30 }, { "walk": 35 }]
+      "examples": [
+        {
+          "walk": 30,
+          "fly": 30
+        },
+        {
+          "walk": 35
+        }
+      ]
     },
     "senses": {
       "type": "object",
       "description": "Special senses, range in feet.",
       "additionalProperties": false,
       "properties": {
-        "darkvision": { "type": "integer", "minimum": 0 },
-        "blindsight": { "type": "integer", "minimum": 0 },
-        "tremorsense": { "type": "integer", "minimum": 0 },
-        "truesight": { "type": "integer", "minimum": 0 }
+        "darkvision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blindsight": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tremorsense": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "truesight": {
+          "type": "integer",
+          "minimum": 0
+        }
       },
-      "examples": [{ "darkvision": 120 }]
+      "examples": [
+        {
+          "darkvision": 120
+        }
+      ]
     },
     "hitPoints": {
       "type": "object",
-      "required": ["max"],
+      "required": [
+        "max"
+      ],
       "additionalProperties": false,
       "properties": {
-        "max": { "type": "integer", "minimum": 1 },
-        "current": { "type": "integer", "description": "Defaults to max if omitted." },
-        "temp": { "type": "integer", "minimum": 0 }
+        "max": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "current": {
+          "type": "integer",
+          "description": "Defaults to max if omitted."
+        },
+        "temp": {
+          "type": "integer",
+          "minimum": 0
+        }
       },
-      "examples": [{ "max": 17, "current": 17 }]
+      "examples": [
+        {
+          "max": 17,
+          "current": 17
+        }
+      ]
     },
     "hitDice": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "die": { "type": "string", "pattern": "^d(4|6|8|10|12)$", "examples": ["d8"] },
-        "total": { "type": "integer", "minimum": 0, "description": "Total dice (usually = level)." },
-        "spent": { "type": "integer", "minimum": 0 }
+        "die": {
+          "type": "string",
+          "pattern": "^d(4|6|8|10|12)$",
+          "examples": [
+            "d8"
+          ]
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total dice (usually = level)."
+        },
+        "spent": {
+          "type": "integer",
+          "minimum": 0
+        }
       },
-      "examples": [{ "die": "d8", "total": 2, "spent": 0 }]
+      "examples": [
+        {
+          "die": "d8",
+          "total": 2,
+          "spent": 0
+        }
+      ]
     },
     "deathSaves": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "successes": { "type": "integer", "minimum": 0, "maximum": 3 },
-        "failures": { "type": "integer", "minimum": 0, "maximum": 3 }
+        "successes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "failures": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        }
       }
     },
     "proficiencies": {
@@ -282,74 +666,358 @@
         "armor": {
           "type": "array",
           "uniqueItems": true,
-          "items": { "enum": ["light", "medium", "heavy", "shields"] },
-          "examples": [["light", "shields"]]
+          "items": {
+            "enum": [
+              "light",
+              "medium",
+              "heavy",
+              "shields"
+            ]
+          },
+          "examples": [
+            [
+              "light",
+              "shields"
+            ]
+          ]
         },
-        "weapons": { "type": "string", "examples": ["Simple Weapons, Martial Weapons"] },
-        "tools": { "type": "string", "examples": ["Thieves' Tools, Cartographer's Tools"] },
-        "languages": { "type": "string", "examples": ["Common, Elvish, Thieves' Cant"] }
+        "weapons": {
+          "type": "string",
+          "examples": [
+            "Simple Weapons, Martial Weapons"
+          ]
+        },
+        "tools": {
+          "type": "string",
+          "examples": [
+            "Thieves' Tools, Cartographer's Tools"
+          ]
+        },
+        "languages": {
+          "type": "string",
+          "examples": [
+            "Common, Elvish, Thieves' Cant"
+          ]
+        }
       }
     },
     "weapon": {
       "type": "object",
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "additionalProperties": false,
       "properties": {
-        "name": { "type": "string", "examples": ["Dagger", "Poison Spray"] },
-        "bonus": { "type": "string", "description": "Attack bonus or save DC, as displayed.", "examples": ["+5", "DC 13"] },
-        "damage": { "type": "string", "examples": ["1d4+3 Piercing"] },
-        "notes": { "type": "string", "examples": ["Finesse, Light, Thrown, Nick"] }
+        "name": {
+          "type": "string",
+          "examples": [
+            "Dagger",
+            "Poison Spray"
+          ]
+        },
+        "bonus": {
+          "type": "string",
+          "description": "Attack bonus or save DC, as displayed.",
+          "examples": [
+            "+5",
+            "DC 13"
+          ]
+        },
+        "damage": {
+          "type": "string",
+          "examples": [
+            "1d4+3 Piercing"
+          ]
+        },
+        "notes": {
+          "type": "string",
+          "examples": [
+            "Finesse, Light, Thrown, Nick"
+          ]
+        }
       }
     },
     "namedFeature": {
       "type": "object",
       "description": "A named trait/feat/feature with a description. Splitting name from description lets each layout format them (headings, bullets, etc.).",
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "additionalProperties": false,
       "properties": {
-        "name": { "type": "string", "examples": ["Sneak Attack (1d6)"] },
-        "description": { "type": "string" }
+        "name": {
+          "type": "string",
+          "examples": [
+            "Sneak Attack (1d6)"
+          ]
+        },
+        "description": {
+          "type": "string"
+        }
       }
     },
     "coins": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "cp": { "type": "integer", "minimum": 0 },
-        "sp": { "type": "integer", "minimum": 0 },
-        "ep": { "type": "integer", "minimum": 0 },
-        "gp": { "type": "integer", "minimum": 0 },
-        "pp": { "type": "integer", "minimum": 0 }
+        "cp": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sp": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ep": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "gp": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pp": {
+          "type": "integer",
+          "minimum": 0
+        }
       },
-      "examples": [{ "gp": 82 }]
+      "examples": [
+        {
+          "gp": 82
+        }
+      ]
     },
     "spellcasting": {
       "type": "object",
       "description": "Present for any caster (class- or feat-based). The save DC and attack bonus are derived from the ability + proficiency bonus unless explicitly given.",
-      "required": ["ability"],
+      "required": [
+        "ability"
+      ],
       "additionalProperties": false,
       "properties": {
-        "ability": { "$ref": "#/$defs/ability", "description": "Spellcasting ability key." },
-        "modifier": { "type": "integer", "description": "Override; otherwise the ability modifier." },
-        "save_dc": { "type": "integer", "description": "Override; otherwise 8 + prof + ability mod." },
-        "attack_bonus": { "type": "integer", "description": "Override; otherwise prof + ability mod." }
+        "ability": {
+          "$ref": "#/$defs/ability",
+          "description": "Spellcasting ability key."
+        },
+        "modifier": {
+          "type": "integer",
+          "description": "Override; otherwise the ability modifier."
+        },
+        "save_dc": {
+          "type": "integer",
+          "description": "Override; otherwise 8 + prof + ability mod."
+        },
+        "attack_bonus": {
+          "type": "integer",
+          "description": "Override; otherwise prof + ability mod."
+        }
       },
-      "examples": [{ "ability": "wis" }, { "ability": "int" }]
+      "examples": [
+        {
+          "ability": "wis"
+        },
+        {
+          "ability": "int"
+        }
+      ]
     },
     "spell": {
       "type": "object",
-      "required": ["name", "level"],
+      "required": [
+        "name",
+        "level"
+      ],
       "additionalProperties": false,
       "properties": {
-        "level": { "type": "string", "description": "\"C\" for cantrip, else \"1\"-\"9\".", "examples": ["C", "1"] },
-        "name": { "type": "string", "examples": ["Guidance"] },
-        "casting_time": { "type": "string", "examples": ["1A", "1BA", "1R"] },
-        "range": { "type": "string", "examples": ["30 ft.", "Touch", "Self"] },
-        "notes": { "type": "string", "examples": ["WIS save DC 12. Conc 1 min."] },
-        "concentration": { "type": "boolean", "default": false },
-        "ritual": { "type": "boolean", "default": false },
-        "material": { "type": "boolean", "default": false },
-        "prepared": { "type": "boolean", "description": "For prepared casters; whether currently prepared.", "default": false }
+        "level": {
+          "type": "string",
+          "description": "\"C\" for cantrip, else \"1\"-\"9\".",
+          "examples": [
+            "C",
+            "1"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "examples": [
+            "Guidance"
+          ]
+        },
+        "casting_time": {
+          "type": "string",
+          "examples": [
+            "1A",
+            "1BA",
+            "1R"
+          ]
+        },
+        "range": {
+          "type": "string",
+          "examples": [
+            "30 ft.",
+            "Touch",
+            "Self"
+          ]
+        },
+        "notes": {
+          "type": "string",
+          "examples": [
+            "WIS save DC 12. Conc 1 min."
+          ]
+        },
+        "concentration": {
+          "type": "boolean",
+          "default": false
+        },
+        "ritual": {
+          "type": "boolean",
+          "default": false
+        },
+        "material": {
+          "type": "boolean",
+          "default": false
+        },
+        "prepared": {
+          "type": "boolean",
+          "description": "For prepared casters; whether currently prepared.",
+          "default": false
+        }
+      }
+    },
+    "spellSlotEntry": {
+      "description": "Either a bare total (backwards compatible with 1.0.0) or an object with total and expended.",
+      "oneOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "object",
+          "required": [
+            "total"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "total": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of slots available at this level."
+            },
+            "expended": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Slots already used. Should not exceed total; tools may clamp."
+            }
+          }
+        }
+      ]
+    },
+    "resource": {
+      "type": "object",
+      "description": "A named pool of limited uses that replenishes on a rest or similar.",
+      "required": [
+        "name",
+        "maximum"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Display name of the resource.",
+          "examples": [
+            "Ki",
+            "Rage",
+            "Sorcery Points",
+            "Channel Divinity"
+          ]
+        },
+        "current": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Remaining uses. Defaults to maximum when omitted."
+        },
+        "maximum": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Maximum uses in the pool."
+        }
+      }
+    },
+    "pactSlots": {
+      "type": "object",
+      "description": "Pact Magic slot tracking (shared slot level).",
+      "required": [
+        "total"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "examples": [
+            1,
+            2
+          ]
+        },
+        "expended": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Pact slots already used. Defaults to 0."
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9,
+          "description": "Level of each pact slot. Defaults to 1.",
+          "examples": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "examples": [
+        {
+          "total": 2,
+          "expended": 0,
+          "level": 2
+        }
+      ]
+    },
+    "equipmentItem": {
+      "type": "object",
+      "description": "Structured equipment entry. Prefer this when quantity, equipped state, or notes matter; plain strings remain valid.",
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "examples": [
+            "Longsword",
+            "Thieves' Tools"
+          ]
+        },
+        "quantity": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number carried. Defaults to 1 when omitted.",
+          "examples": [
+            1,
+            2,
+            10
+          ]
+        },
+        "equipped": {
+          "type": "boolean",
+          "description": "Whether the item is currently equipped or worn.",
+          "default": false
+        },
+        "notes": {
+          "type": "string",
+          "description": "Free-text details (contents, charges, quirks)."
+        }
       }
     }
   }

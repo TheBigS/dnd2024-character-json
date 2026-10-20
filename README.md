@@ -103,6 +103,13 @@ appears in `output/`.
   mastery, feat-granting backgrounds, and homebrew are all expressible — things a
   2014-era schema can't represent.
 
+**1.1.0 live-play fields** (optional, additive): `spell_slots` may use
+`{ "total", "expended" }` per level; `resources` tracks class pools (ki, rage,
+channel divinity, …); `prepared_count` records a preparation budget; `pact_slots`
+covers pact magic; `equipment` entries may be objects with `quantity` / `equipped`
+/ `notes`. See `spec/examples/live-play-state.json` and `spec/CHANGELOG.md`.
+
+
 The spec is self-contained (one schema file with a stable `$id`), so it can move
 into its own repository later and be shared by multiple converter projects.
 

@@ -1,0 +1,93 @@
+{
+  "spec_version": "1.1.0",
+  "_comment": "Minimal example of 1.1.0 live-play fields: slot expenditure, class resources, preparation budget, and structured equipment. Pact slots are covered in the schema examples and unit tests.",
+
+  "name": "Ashara Vale",
+  "species": {
+    "name": "Human",
+    "traits": [
+      { "name": "Resourceful", "description": "Gain Heroic Inspiration after a Long Rest." }
+    ]
+  },
+  "classes": [
+    { "name": "Cleric", "subclass": "Life Domain", "level": 3, "hit_die": "d8" }
+  ],
+  "background": "Acolyte",
+  "alignment": "Neutral Good",
+  "xp": "(Milestone)",
+
+  "abilities": { "str": 10, "dex": 12, "con": 14, "int": 10, "wis": 16, "cha": 13 },
+
+  "saving_throws": ["wis", "cha"],
+  "skills": {
+    "insight": "proficient",
+    "medicine": "proficient",
+    "persuasion": "proficient",
+    "religion": "proficient"
+  },
+
+  "armor_class": 16,
+  "shield": true,
+  "initiative": 1,
+  "speed": { "walk": 30 },
+  "size": "Medium",
+  "passive_perception": 13,
+
+  "hit_points": { "max": 24, "current": 18, "temp": 5 },
+  "hit_dice": { "die": "d8", "total": 3, "spent": 1 },
+  "death_saves": { "successes": 0, "failures": 0 },
+
+  "proficiencies": {
+    "armor": ["light", "medium", "heavy", "shields"],
+    "weapons": "Simple Weapons",
+    "tools": "",
+    "languages": "Common, Celestial"
+  },
+
+  "weapons": [
+    { "name": "Mace", "bonus": "+2", "damage": "1d6 Bludgeoning", "notes": "Simple" },
+    { "name": "Sacred Flame", "bonus": "DC 13", "damage": "1d8 Radiant", "notes": "Cantrip. Dexterity save." }
+  ],
+
+  "feats": [
+    { "name": "Healer", "description": "Use a healer's kit to restore hit points more effectively." }
+  ],
+  "class_features": [
+    { "name": "Spellcasting", "description": "Wisdom is your spellcasting ability. Prepare cleric spells each day." },
+    { "name": "Channel Divinity (1/rest)", "description": "Turn Undead or preserve life (Life Domain)." },
+    { "name": "Disciple of Life", "description": "Healing spells restore extra hit points." }
+  ],
+
+  "equipment": [
+    { "name": "Chain Mail", "equipped": true },
+    { "name": "Shield", "equipped": true },
+    { "name": "Mace", "equipped": true },
+    { "name": "Holy Symbol", "equipped": true },
+    { "name": "Healer's Kit", "quantity": 1, "notes": "10 uses" },
+    "Backpack",
+    "Rations (5)"
+  ],
+  "coins": { "gp": 15 },
+  "attunement": [],
+
+  "spellcasting": { "ability": "wis", "save_dc": 13, "attack_bonus": 5 },
+  "spell_slots": {
+    "1": { "total": 4, "expended": 1 },
+    "2": { "total": 2, "expended": 0 }
+  },
+  "prepared_count": 6,
+  "resources": [
+    { "name": "Channel Divinity", "current": 1, "maximum": 1 }
+  ],
+
+  "spells": [
+    { "level": "C", "name": "Guidance", "casting_time": "1A", "range": "Touch", "concentration": true, "prepared": true },
+    { "level": "C", "name": "Sacred Flame", "casting_time": "1A", "range": "60 ft.", "prepared": true },
+    { "level": "1", "name": "Cure Wounds", "casting_time": "1A", "range": "Touch", "prepared": true },
+    { "level": "1", "name": "Bless", "casting_time": "1A", "range": "30 ft.", "concentration": true, "prepared": true },
+    { "level": "2", "name": "Lesser Restoration", "casting_time": "1BA", "range": "Touch", "prepared": true },
+    { "level": "2", "name": "Spiritual Weapon", "casting_time": "1BA", "range": "60 ft.", "prepared": true }
+  ],
+
+  "personality": "Steady under pressure; keeps a spare healer's kit for everyone else's bad ideas."
+}
